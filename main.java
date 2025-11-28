@@ -32,18 +32,58 @@ public class Main {
                     int tipo = entrada.nextInt();
                     entrada.nextLine();
                     String tipoVeh = (tipo == 1) ? "Auto" : (tipo == 2) ? "Moto" : "Camioneta";
-                    Vehiculo v = new Vehiculo("TK-" + contadorTicket, placa, tipoVeh, LocalDateTime.now(), "En estacionamiento");
+                    Vehiculo v = new Vehiculo("TK-" + contadorTicket, placa, tipoVeh, LocalDateTime.now(), "abierto");
                     vehiculos.add(v);
                     contadorTicket++;
                     break;
                 case 2:
-                    
+                    System.out.print("\nTicket que se va a cerrar: ");
+                    String idCerrar = entrada.nextLine();
+                    boolean encontrado = false;
+                    for(Vehiculo veh : vehiculos) {
+                        if(veh.getIdTicket().equals(idCerrar) && veh.getEstado().equals("abierto")) {
+                            veh.registrarSalida();
+                            System.out.println("Vehículo cerrado: " + veh.getPlaca());
+                            System.out.println(veh);
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if(!encontrado) {
+                        System.out.println("No existe el ticket o y está cerrado");
+                    }
                     break;
                 case 3:
+                    System.out.println("\n--- TICKETS ABIERTOS ---");
+                    for(Vehiculo veh : vehiculos) {
+                        if(veh.getEstado().equals("abierto")) {
+                            System.out.println(veh);
+                        }
+                    }
                     break;
                 case 4:
+                    System.out.println("\n--- TICKETS CERRADOS ---");
+                    for(Vehiculo veh : vehiculos) {
+                        if(veh.getEstado().equals("cerrado")) {
+                            System.out.println(veh);
+                        }
+                    }
                     break;
                 case 5:
+                    System.out.print("\nIngrese el ID del ticket (ej: TK-1): ");
+                    String idBuscar = entrada.nextLine();
+                    boolean encontradoDetalle = false;
+                    for(Vehiculo veh : vehiculos) {
+                        if(veh.getIdTicket().equals(idBuscar)) {
+                            System.out.println("\n--- DETALLE DEL TICKET ---");
+                            System.out.println(veh);
+                            encontradoDetalle = true;
+                            break;
+                        }
+                    }
+                    if(!encontradoDetalle) {
+                        System.out.println("Ticket no encontrado");
+                    }
                     break;
                 case 6:
                     break;
