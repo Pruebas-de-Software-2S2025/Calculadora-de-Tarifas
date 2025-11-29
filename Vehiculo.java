@@ -31,8 +31,11 @@ public class Vehiculo {
     public LocalDateTime getFechaHoraSalida() { return fechaHoraSalida; }
     public String getEstado() { return estado; }
     
+    public void setFechaHoraSalida(LocalDateTime fechaHoraSalida) {
+        this.fechaHoraSalida = fechaHoraSalida;
+    }
+    
     public void registrarSalida() {
-        this.fechaHoraSalida = LocalDateTime.now();
         this.estado = "cerrado";
     }
     
@@ -77,7 +80,7 @@ public class Vehiculo {
     public String toString() {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         String salida = fechaHoraSalida != null ? fechaHoraSalida.format(formato) : "En estacionamiento";
-        String cobro = (estado.equals("cerrado")) ? String.format(" | Cobro: $%.2f", calcularCobro()) : "";
+        String cobro = (estado.equals("cerrado")) ? String.format(" | Cobro: $%.0f", calcularCobro()) : "";
         return String.format("ID: %s | Placa: %s | Tipo: %s | Entrada: %s | Salida: %s | Estado: %s%s",
                 idTicket, placa, tipoVehiculo, fechaHoraEntrada.format(formato), salida, estado, cobro);
     }
