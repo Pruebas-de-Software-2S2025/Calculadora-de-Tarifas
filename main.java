@@ -86,6 +86,14 @@ public class Main {
                     }
                     break;
                 case 6:
+                    System.out.println("\n--- TOTAL RECAUDADO DEL DÍA ---");
+                    double totalRecaudado = 0;
+                    for(Vehiculo veh : vehiculos) {
+                        if(veh.getEstado().equals("cerrado")) {
+                            totalRecaudado += veh.calcularCobro();
+                        }
+                    }
+                    System.out.printf("Total recaudado: $%.2f\n", totalRecaudado);
                     break;
                 case 7:
                     break;
