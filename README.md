@@ -4,7 +4,7 @@
 
 ## 📋 Tabla de Contenidos
 1. [Descripción General](#-descripción-general)
-2. [Diseño del Sistema](#diseño-del-sistema)
+2. [Diseño del Sistema](#-dise%C3%B1o-del-sistema)
 3. [Código Fuente](#-código-fuente)
 4. [Instrucciones para Compilar, Ejecutar y Probar](#-instrucciones-para-compilar-ejecutar-y-probar)
 5. [Suite de Tests JUnit](#-suite-de-tests-junit)
@@ -276,4 +276,5 @@ Desarrollado como ejercicio práctico de Pruebas de Software - USM 2S 2025
 ---
 
 **Última actualización:** Diciembre 2025
+
 
