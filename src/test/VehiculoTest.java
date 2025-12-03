@@ -252,4 +252,34 @@ public class VehiculoTest {
         
         assertEquals(15800, total, "El total debe incluir el tope máximo y otros cobros");
     }
+
+    @Test
+    @DisplayName("Descuento fin de semana: Auto sábado 30 min debería cobrar $720 (10% desc)")
+    void testDescuentoFinDeSemanaAuto() {
+        LocalDateTime fechaSabado = LocalDateTime.of(2024, 1, 6, 10, 0); 
+        Vehiculo v = new Vehiculo("TK-1", "ABC-123", "Auto", fechaSabado, "abierto");
+        v.setFechaHoraSalida(fechaSabado.plusMinutes(30));
+        v.registrarSalida();
+        assertEquals(720, v.calcularCobro(), "30 min en sábado: $800 - 10% = $720");
+    }
+
+    @Test
+    @DisplayName("Descuento fin de semana: Moto domingo 60 min debería cobrar $900 (10% desc)")
+    void testDescuentoFinDeSemanaMoto() {
+        LocalDateTime fechaDomingo = LocalDateTime.of(2024, 1, 7, 10, 0); 
+        Vehiculo v = new Vehiculo("TK-2", "XYZ-789", "Moto", fechaDomingo, "abierto");
+        v.setFechaHoraSalida(fechaDomingo.plusMinutes(60));
+        v.registrarSalida();
+        assertEquals(900, v.calcularCobro(), "60 min domingo (2 bloques): $1000 - 10% = $900");
+    }
+
+    @Test
+    @DisplayName("Sin descuento en día laboral: Auto lunes 30 min debería cobrar $800")
+    void testSinDescuentoDiaLaboral() {
+        LocalDateTime fechaLunes = LocalDateTime.of(2024, 1, 1, 10, 0); 
+        Vehiculo v = new Vehiculo("TK-3", "DEF-456", "Auto", fechaLunes, "abierto");
+        v.setFechaHoraSalida(fechaLunes.plusMinutes(30));
+        v.registrarSalida();
+        assertEquals(800, v.calcularCobro(), "30 min en lunes: $800 (sin descuento)");
+    }
 }

@@ -1,15 +1,17 @@
 # Calculadora de Tarifas de Estacionamiento
 
-> Sistema de gestión de estacionamiento desarrollado con **Java 21**, **JUnit 5** y **TDD** (Test-Driven Development)
+> Sistema de gestión de estacionamiento desarrollado con **Java 21** y **JUnit 5**
 
 ## 📋 Tabla de Contenidos
 1. [Descripción General](#descripción-general)
 2. [Diseño del Sistema](#diseño-del-sistema)
-3. [Requisitos Funcionales](#requisitos-funcionales)
-4. [Instrucciones de Compilación y Ejecución](#instrucciones-de-compilación-y-ejecución)
-5. [Suite de Tests](#suite-de-tests)
-6. [Cobertura de Código](#cobertura-de-código)
-7. [Licencia](#licencia)
+3. [Código Fuente](#código-fuente)
+4. [Instrucciones para Compilar, Ejecutar y Probar](#instrucciones-para-compilar-ejecutar-y-probar)
+5. [Suite de Tests JUnit](#suite-de-tests-junit)
+6. [Ejemplo de Salida de Tests](#ejemplo-de-salida-de-tests)
+7. [Cobertura de Código](#cobertura-de-código)
+8. [Consideraciones Técnicas](#consideraciones-técnicas)
+9. [Licencia](#licencia)
 
 ---
 
@@ -22,9 +24,9 @@ Sistema de línea de comandos (CLI) que gestiona el cobro de un estacionamiento 
 - ✅ Cálculo de tarifas por bloques de 30 minutos
 - ✅ Tarifas diferenciadas por tipo de vehículo
 - ✅ Tope diario de cobro ($15.000)
-- ✅ Descuento fin de semana (10%)
+- ✅ Descuento fin de semana (10%) - Implementado y testeado
 - ✅ Consultas de tickets abiertos, cerrados y total recaudado
-- ✅ 33 pruebas unitarias con 100% de cobertura
+- ✅ 27 pruebas unitarias con 100% de cobertura
 
 ---
 
@@ -32,36 +34,7 @@ Sistema de línea de comandos (CLI) que gestiona el cobro de un estacionamiento 
 
 ### Diagrama UML
 
-```
-┌─────────────────────────────────┐
-│         Vehiculo                │
-├─────────────────────────────────┤
-│ - idTicket: String              │
-│ - placa: String                 │
-│ - tipoVehiculo: String          │
-│ - fechaHoraEntrada: LocalDateTime│
-│ - fechaHoraSalida: LocalDateTime│
-│ - estado: String (abierto/cerrado)│
-│ - TARIFA_AUTO: int = 800        │
-│ - TARIFA_MOTO: int = 500        │
-│ - TARIFA_CAMIONETA: int = 1000  │
-│ - TOPE_DIARIO: double = 15000.0 │
-│ - DESCUENTO_FINDE: double = 0.10│
-├─────────────────────────────────┤
-│ + getIdTicket(): String         │
-│ + getPlaca(): String            │
-│ + getTipoVehiculo(): String     │
-│ + getFechaHoraEntrada(): LocalDateTime│
-│ + getFechaHoraSalida(): LocalDateTime│
-│ + getEstado(): String           │
-│ + setFechaHoraSalida(LocalDateTime) │
-│ + registrarSalida(): void       │
-│ + calcularTiempoEnMinutos(): long │
-│ + calcularCobro(): double       │
-│ + esFinDeSemana(): boolean      │
-│ + toString(): String            │
-└─────────────────────────────────┘
-```
+[![](https://mermaid.ink/img/pako:eNqFk92OmzAQhV8F-aqrplFYIBDuUCAqUhNWDduLKlI0wbPEWrCRMVXbKO9eA5st-Wt9hX2-meM5yAeSCYrEJxueFVDXIYNcQrnhhl7difEN9yxrCmEc-tN2fVoryXhuMJqy7BXVtVIVkMH1sWKVODUcqF9EBkUIClNWovGC2R4-CwkRVxIo_B9cQ8HoDTusFdChEePKSIOv8SLYBs9pcltZJveUebCMk1WUBgOZimZXoJEmT9E2jDWXXIthtJ4_R6s02S7iVRj9BT7mqOK3ED88GP21z-WnNsk7WjqI8w6yuAhTY2ch3qH7RP8NR126t3zr605nfR6MH4LRQYHEnNX6fvLd9wLQxXpIkCnDshIRXzLeKFFrsBBn1idwLnayvVv_BwYA1gvGQ1xjCbw12glRIPABoUQ_0MVkRzIiuWSU-Eo2OCIlyhLaLelexoaoPeqIiK8_KcjXjX5UbU0F_LsQ5alMiibfE_8FilrvmorqTN6e3TuCnKKeoOGK-KbXtSD-gfwkvuU4Y9OzZ-bUmtqPU9eyR-QX8W13bNvezJo9mubMdT3bPo7I7851MvZczzInzsR0XMd2j38AB4gxiA?type=png)](https://mermaid.live/edit#pako:eNqFk92OmzAQhV8F-aqrplFYIBDuUCAqUhNWDduLKlI0wbPEWrCRMVXbKO9eA5st-Wt9hX2-meM5yAeSCYrEJxueFVDXIYNcQrnhhl7difEN9yxrCmEc-tN2fVoryXhuMJqy7BXVtVIVkMH1sWKVODUcqF9EBkUIClNWovGC2R4-CwkRVxIo_B9cQ8HoDTusFdChEePKSIOv8SLYBs9pcltZJveUebCMk1WUBgOZimZXoJEmT9E2jDWXXIthtJ4_R6s02S7iVRj9BT7mqOK3ED88GP21z-WnNsk7WjqI8w6yuAhTY2ch3qH7RP8NR126t3zr605nfR6MH4LRQYHEnNX6fvLd9wLQxXpIkCnDshIRXzLeKFFrsBBn1idwLnayvVv_BwYA1gvGQ1xjCbw12glRIPABoUQ_0MVkRzIiuWSU-Eo2OCIlyhLaLelexoaoPeqIiK8_KcjXjX5UbU0F_LsQ5alMiibfE_8FilrvmorqTN6e3TuCnKKeoOGK-KbXtSD-gfwkvuU4Y9OzZ-bUmtqPU9eyR-QX8W13bNvezJo9mubMdT3bPo7I7851MvZczzInzsR0XMd2j38AB4gxiA)
 
 ### Lógica de Negocio
 
@@ -105,134 +78,136 @@ Sistema de línea de comandos (CLI) que gestiona el cobro de un estacionamiento 
 
 ---
 
-## 🚀 Instrucciones de Compilación y Ejecución
+## 💻 Código Fuente
 
-### Requisitos Previos
-- Java 21+
-- Maven 3.9+ (opcional, puede compilarse con `javac`)
-
-### Compilación Manual
-
-```bash
-# Posicionarse en el directorio del proyecto
-cd src/java
-
-# Compilar las clases
-javac Vehiculo.java Main.java
-
-# Compilar tests (requiere JUnit 5 en el classpath)
-cd ../test
-javac -cp ".:../java:../../lib/*" VehiculoTest.java
 ```
-
-### Con Maven (si existe pom.xml)
-
-```bash
-# Compilar
-mvn clean compile
-
-# Ejecutar aplicación
-mvn exec:java -Dexec.mainClass="Main"
-
-# Ejecutar tests
-mvn test
-
-# Generar reporte de cobertura JaCoCo
-mvn jacoco:report
-```
-
-### Ejecución Manual
-
-```bash
-# Desde src/java
-java Main
-
-# Desde el proyecto raíz
-java -cp src/java Main
-```
-
-### Ejecución de Tests
-
-```bash
-# Con Maven
-mvn test
-
-# Manual (requiere classpath correcto)
-java -cp ".:lib/*" org.junit.platform.console.ConsoleLauncher --scan-classpath
+Calculadora-de-Tarifas/
+├── src/
+│   ├── java/
+│   │   ├── Main.java          # Aplicación CLI (menú principal)
+│   │   └── Vehiculo.java      # Modelo y lógica de cálculo
+│   └── test/
+       └─ VehiculoTest.java  # Suite de 27 tests JUnit 5
+├── lib/                       # Dependencias (JUnit 5)
+├── Makefile                   # Comandos de compilación y ejecución
+├── README.md                  # Este archivo
+└── LICENSE                    # Licencia MIT
 ```
 
 ---
 
-## ✅ Suite de Tests
+## 🚀 Instrucciones para Compilar, Ejecutar y Probar
 
-La suite contiene **33 pruebas unitarias** que cubren:
+### Requisitos Previos
+- Java 21+
+- **En Windows:** Usar WSL (Windows Subsystem for Linux) o Git Bash para ejecutar los comandos make
+- **En macOS/Linux:** Make está incluido por defecto
 
-### Tests por Funcionalidad
+### ⚠️ IMPORTANTE: En Windows, ejecutar en terminal Ubuntu/WSL
 
-#### Constructor y Getters (1 test)
+Los comandos Makefile deben ejecutarse desde una **terminal Ubuntu/WSL**, no desde PowerShell de Windows.
+
+### Ejecutar la Aplicación
+
+```bash
+make run
+```
+
+Esto compila (si es necesario) y ejecuta la aplicación CLI.
+
+### Ejecutar los Tests
+
+```bash
+make test
+```
+
+Esto compila los tests, descarga automáticamente JUnit 5 (si es necesario) y ejecuta la suite de 27 pruebas unitarias.
+
+### Limpiar Archivos Compilados
+
+```bash
+make clean
+```
+
+---
+
+## ✅ Suite de Tests JUnit
+
+La suite contiene **27 pruebas unitarias** que validan:
+
 - ✅ Inicialización correcta de vehículos
+- ✅ Cálculo de bloques de 30 minutos para cada tipo de vehículo
+- ✅ Tarifas correctas: Auto ($800), Moto ($500), Camioneta ($1.000)
+- ✅ Tope máximo diario: $15.000
+- ✅ Cambios de estado: abierto → cerrado
+- ✅ Casos inválidos: sin salida, salida anterior a entrada
+- ✅ Tipos de vehículo desconocidos
+- ✅ Descuento fin de semana: sábado, domingo con 10% de descuento
+- ✅ Sin descuento en días laborales
+- ✅ Formato de salida correcta
+- ✅ Total recaudado con múltiples vehículos
 
-#### Cálculo de Bloques (5 tests por tipo)
-- ✅ 0 minutos → operación inválida ($0)
-- ✅ 30 minutos → 1 bloque
-- ✅ 31 minutos → 2 bloques
-- ✅ 60 minutos → 2 bloques
-- ✅ 61 minutos → 3 bloques
+---
 
-#### Cálculo para Cada Tipo (15 tests)
-- Auto (5 tests)
-- Moto (5 tests)
-- Camioneta (5 tests)
-
-#### Casos Especiales (13 tests)
-- ✅ Tope máximo ($15.000)
-- ✅ Cambio de estado (abierto → cerrado)
-- ✅ Cobro sin salida
-- ✅ Salida anterior a entrada (inválida)
-- ✅ Tipo de vehículo desconocido
-- ✅ Formato toString() para abiertos y cerrados
-- ✅ Total recaudado múltiples vehículos
-- ✅ Total sin contar abiertos
-- ✅ Total con tope máximo
-
-### Ejemplo de Salida de Tests
+## 📤 Ejemplo de Salida de Tests
 
 ```
-[INFO] Running VehiculoTest
-[INFO] 
-[INFO] ✓ Debe inicializar correctamente un vehículo
-[INFO] ✓ Cálculo Auto: 0 min debería ser operación inválida y cobrar $0
-[INFO] ✓ Cálculo Auto: 30 min debería cobrar $800
-[INFO] ✓ Cálculo Auto: 31 minutos deberían ser 2 bloques -> $1600
-[INFO] ✓ Cálculo Auto: 60 minutos deberían ser 2 bloques -> $1600
-[INFO] ✓ Cálculo Auto: 61 minutos deberían ser 3 bloques -> $2400
-[INFO] ✓ Cálculo Moto: 30 min debería cobrar $500
-[INFO] ✓ Cálculo Moto: 31 minutos deberían ser 2 bloques -> $1000
-[INFO] ✓ Cálculo Moto: 60 minutos deberían ser 2 bloques -> $1000
-[INFO] ✓ Cálculo Moto: 61 minutos deberían ser 3 bloques -> $1500
-[INFO] ✓ Cálculo Camioneta: 30 min debería cobrar $1000
-[INFO] ✓ Cálculo Camioneta: 31 minutos deberían ser 2 bloques -> $2000
-[INFO] ✓ Cálculo Camioneta: 60 minutos deberían ser 2 bloques -> $2000
-[INFO] ✓ Cálculo Camioneta: 61 minutos deberían ser 3 bloques -> $3000
-[INFO] ✓ Tope Máximo: No debe cobrar más de $15.000 aunque esté días
-[INFO] ✓ Debe manejar bien el cambio de estado
-[INFO] ✓ Si no ha salido (fecha salida null), el cobro debe ser 0
-[INFO] ✓ Fecha de salida anterior a la entrada debe dar cobro 0
-[INFO] ✓ Tipo de vehículo desconocido debe dar cobro 0
-[INFO] ✓ toString() debe mostrar 'En estacionamiento' para tickets abiertos
-[INFO] ✓ toString() debe mostrar el cobro para tickets cerrados
-[INFO] ✓ Calcular total recaudado de múltiples vehículos
-[INFO] ✓ Total recaudado con vehículos abiertos (no deben contar)
-[INFO] ✓ Total recaudado alcanza tope máximo
-[INFO]
-[INFO] Tests run: 33, Failures: 0, Skipped: 0
+💚 Thanks for using JUnit! Support its development at https://junit.org/sponsoring
+
+Operación Invalida
+╷
+├─ JUnit Jupiter ✔
+│  └─ VehiculoTest ✔
+│     ├─ toString() debe mostrar 'En estacionamiento' para tickets abiertos ✔
+│     ├─ Cálculo Camioneta: 61 minutos deberían ser 3 bloques -> $3000 ✔
+│     ├─ Tipo de vehículo desconocido debe dar cobro 0 ✔
+│     ├─ Total recaudado con vehículos abiertos (no deben contar) ✔
+│     ├─ Si no ha salido (fecha salida null), el cobro debe ser 0 ✔
+│     ├─ Tope Máximo: No debe cobrar más de $15.000 aunque esté días ✔
+│     ├─ Cálculo Moto: 31 minutos deberían ser 2 bloques -> $1000 ✔
+│     ├─ Cálculo Auto: 31 minutos deberían ser 2 bloques -> $1600 ✔
+│     ├─ Cálculo Auto: 0 min debería ser operación inválida y cobrar $0 ✔
+│     ├─ Cálculo Camioneta: 31 minutos deberían ser 2 bloques -> $2000 ✔
+│     ├─ Sin descuento en día laboral: Auto lunes 30 min debería cobrar $800 ✔
+│     ├─ toString() debe mostrar el cobro para tickets cerrados ✔
+│     ├─ Fecha de salida anterior a la entrada debe dar cobro 0 ✔
+│     ├─ Descuento fin de semana: Auto sábado 30 min debería cobrar $720 (10% desc) ✔
+│     ├─ Descuento fin de semana: Moto domingo 60 min debería cobrar $900 (10% desc) ✔
+│     ├─ Calcular total recaudado de múltiples vehículos ✔
+│     ├─ Cálculo Moto: 60 minutos deberían ser 2 bloques -> $1000 ✔
+│     ├─ Cálculo Auto: 60 minutos deberían ser 2 bloques -> $1600 ✔
+│     ├─ Debe manejar bien el cambio de estado ✔
+│     ├─ Cálculo Camioneta: 60 minutos deberían ser 2 bloques -> $2000 ✔
+│     ├─ Total recaudado alcanza tope máximo ✔
+│     ├─ Cálculo Moto: 30 min debería cobrar $500 ✔
+│     ├─ Cálculo Auto: 30 min debería cobrar $800 ✔
+│     ├─ Cálculo Camioneta: 30 min debería cobrar $1000 ✔
+│     ├─ Cálculo Moto: 61 minutos deberían ser 3 bloques -> $1500 ✔
+│     ├─ Cálculo Auto: 61 minutos deberían ser 3 bloques -> $2400 ✔
+│     └─ Debe inicializar correctamente un vehículo ✔
+├─ JUnit Vintage ✔
+└─ JUnit Platform Suite ✔
+
+Test run finished after 133 ms
+[         4 containers found      ]
+[         0 containers skipped    ]
+[         4 containers started    ]
+[         0 containers aborted    ]
+[         4 containers successful ]
+[         0 containers failed     ]
+[        27 tests found           ]
+[         0 tests skipped         ]
+[        27 tests started         ]
+[         0 tests aborted         ]
+[        27 tests successful      ]
+[         0 tests failed          ]
 ```
 
 ---
 
 ## 📊 Cobertura de Código
 
-### ¿Qué Tipo de Cobertura se Midió?
+### ¿Qué tipo de cobertura se midió y por qué?
 
 Se implementó **cobertura de código statement/line** (cobertura de líneas ejecutables):
 
@@ -245,99 +220,46 @@ Clase Vehiculo:
 ```
 
 **Por qué esta métrica:**
-1. **Statement Coverage** es el nivel más básico y fundamental de cobertura
-2. Garantiza que cada instrucción de código es ejecutada al menos una vez
-3. Es apropiado para validar la lógica de negocio crítica
-4. Fácil de medir y reportar con JaCoCo
+1. **Statement Coverage es el nivel más básico y fundamental** de cobertura de código
+2. **Garantiza que cada instrucción se ejecuta al menos una vez**, validando la lógica de negocio
+3. **Apropiado para este proyecto** que requiere validar cálculos y cambios de estado
+4. **Fácil de medir y reportar** sin herramientas complejas
+5. **Previene código muerto** asegurando que todas las líneas son necesarias
 
-### Configuración de JaCoCo
-
-Para medir la cobertura:
-
-```xml
-<!-- En pom.xml -->
-<plugin>
-    <groupId>org.jacoco</groupId>
-    <artifactId>jacoco-maven-plugin</artifactId>
-    <version>0.8.8</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>prepare-agent</goal>
-            </goals>
-        </execution>
-        <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals>
-                <goal>report</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-```
-
-Comando para generar reporte:
-```bash
-mvn jacoco:report
-```
-
-El reporte se genera en: `target/site/jacoco/index.html`
-
----
-
-## 📁 Estructura del Proyecto
-
-```
-Calculadora-de-Tarifas/
-├── src/
-│   ├── java/
-│   │   ├── Main.java          # Aplicación CLI (menú principal)
-│   │   └── Vehiculo.java      # Modelo y lógica de cálculo
-│   └── test/
-│       └── VehiculoTest.java  # Suite de 33 tests
-├── lib/                       # Dependencias (JUnit 5, etc.)
-├── Makefile                   # Comandos de compilación y ejecución
-├── pom.xml                    # Configuración Maven (opcional)
-├── README.md                  # Este archivo
-├── LICENSE                    # Licencia MIT
-└── .gitignore
-```
-
----
-
-## 🛠️ Tecnologías Utilizadas
-
-| Componente | Versión |
-|-----------|---------|
-| Java | 21+ |
-| JUnit | 5.9+ |
-| Maven | 3.9+ |
-| JaCoCo | 0.8.8+ |
+Los 27 tests cubren todos los caminos de ejecución posibles en `Vehiculo.java`, incluyendo:
+- Casos normales de cálculo para Auto, Moto y Camioneta
+- Casos límite: 0 minutos, máximo diario ($15.000)
+- Casos inválidos: salida anterior a entrada, tipo de vehículo desconocido
+- Descuentos: 10% para fin de semana (sábado/domingo)
 
 ---
 
 ## 📋 Consideraciones Técnicas
 
-### Diseño OO
-- ✅ Clase `Vehiculo` encapsula datos y comportamiento
-- ✅ Constantes para tarifas y límites
-- ✅ Métodos bien definidos con responsabilidades claras
+### Diseño Orientado a Objetos
+- Clase `Vehiculo` encapsula datos y comportamiento del ticket
+- Constantes `static final` para tarifas y límites
+- Encapsulamiento: atributos privados, acceso mediante getters/setters
 
 ### Pruebas Unitarias
-- ✅ Uso de `@DisplayName` para descripción clara de tests
-- ✅ `@BeforeEach` para setup común (si se requiere)
-- ✅ `assertAll()` para validaciones múltiples
-- ✅ Tests independientes y deterministas
+- Uso de `@DisplayName` para descripciones claras
+- Assertions estándar: `assertEquals()`, `assertTrue()`, `assertAll()`
+- Tests independientes e idempotentes (mismo input siempre produce mismo output)
 
-### Manejo de Excepciones
-- ✅ Validación de casos inválidos (minutos ≤ 0, tipo desconocido)
-- ✅ Retorno de 0 para operaciones inválidas (no se lanza excepción)
+### Manejo de Errores y Validaciones
+- Validación de casos inválidos: minutos ≤ 0, tipo de vehículo desconocido
+- Retorno de 0 para operaciones inválidas (sin lanzar excepciones)
+- Validación en `Main.java`: hora de salida ≥ hora de entrada
 
-### Formato y Estilo
-- ✅ Nombres descriptivos en español
-- ✅ Código limpio y legible
-- ✅ Comentarios en partes complejas
+### Formato y Estilo de Código
+- Nombres descriptivos en español
+- Convención Java: CamelCase para clases y métodos
+- Código limpio y legible
+
+### Lógica de Cálculo
+- Fórmula de bloques: `(minutos + 29) / 30` (redondeo hacia arriba)
+- Cobro base: `bloques × tarifa_tipo_vehículo`
+- Aplicación de tope: Si cobro > $15.000, se cobra $15.000
 
 ---
 
@@ -354,122 +276,3 @@ Desarrollado como ejercicio práctico de Pruebas de Software - USM 2S 2025
 ---
 
 **Última actualización:** Diciembre 2025
-
-
-### 2.1. Gestión de Tickets de Estacionamiento
-
-| Operación           | Detalles                                                                                  |
-|---------------------|-------------------------------------------------------------------------------------------|
-| Registrar entrada   | Crea un ticket de estacionamiento con: `idTicket`, `patente`, `tipoVehiculo` (AUTO, MOTO, CAMIONETA), `fechaHoraEntrada`, `estado` (ABIERTO). |
-| Registrar salida    | Completa un ticket **abierto** agregando: `fechaHoraSalida`, `montoCobrado`, cambio de `estado` a "Cerrado" |
-| Listar tickets abiertos | Muestra todos los tickets cuyo estado es "Abierto"                                 |
-| Listar tickets cerrados | Muestra el histórico de tickets con estado "Cerrado".                                  |
-| Restricciones       | No se puede registrar salida de un ticket inexistente o ya cerrado.                      |
-
-> Puedes modelar tickets y vehículos como una o varias clases, pero el sistema debe tener clara la idea de un **ticket abierto/cerrado**.
-
----
-
-### 2.2. Cálculo de tarifas
-
-Cuando se registra la "salida" de un vehículo, el sistema debe calcular el valor a pagar según estas reglas:
-
-1. **Duración del estacionamiento**
-
-   - Se calcula la duración en minutos entre `fechaHoraEntrada` y `fechaHoraSalida`.
-   - Si la duración es menor o igual a 0 minutos, la operación debe considerarse inválida (no se cobrar).
-
-2. **Bloques de tiempo**
-
-   - El cobro se hace por **bloques de 30 minutos**, redondeando **hacia arriba**.  
-     - Ejemplos:
-       - 1 a 30 min → 1 bloque  
-       - 31 a 60 min → 2 bloques  
-       - 61 a 90 min → 3 bloques, etc.
-
-3. **Tarifa por tipo de vehículo (por bloque de 30 minutos)**
-
-| Tipo de vehículo | Tarifa por bloque (ejemplo) |
-|------------------|-----------------------------|
-| AUTO             | $800                        |
-| MOTO             | $500                        |
-| CAMIONETA        | $1.000                      |
-
-SE sugiere usar estos valores en la implementación
-
-4. **Tope diario**
-
-   - El monto total a pagar por un ticket **no puede exceder** un máximo diario (por día calendario).  
-   - Para simplificar, usa un "tope único" para todos los vehículos:
-     - **Tope diario**: $15.000  
-   - Si el cálculo por bloques supera este monto, se cobra $15.000 (no hay un teximetro eterno).
-
-5. **Descuento fin de semana**
-
-   - Si la **fecha de entrada** del ticket corresponde a **sábado o domingo**, se aplica un "10 % de descuento" al valor final (después de aplicar el tope diario, si corresponde).
-   - El descuento debe redondearse hacia abajo al entero más cercano.
-
-Toda esta lógica de duración, bloques, tope y descuento debe ser fácilmente testeable con pruebas unitarias.
-
-
-### 2.3. Consultas y reportes simples
-
-El sistema debe permitir:
-
-| Operación                    | Detalles                                                                                                              |
-|------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| Mostrar detalle de un ticket | Consultar por `idTicket` y mostrar patente, tipo, tiempo estacionado, monto cobrado (si está cerrado) o indicar que aún está abierto. |
-| Mostrar total recaudado del día | Entregar la suma de `montoCobrado` de todos los tickets cerrados cuya fecha (entrada o salida, a definir en tu diseño) corresponde al **día actual**. |
-| Validaciones básicas         | Manejar el caso en que no existan tickets para la consulta.                                                          |
-
----
-
-## 3. Requisitos técnicos
-
-| Ítem         | Detalle                                                                                   |
-|-------------|--------------------------------------------------------------------------------------------|
-| Tipo de app | Por consola (CLI)                                                                         |
-| Lenguaje    | Java 21+                                                                                  |
-| Build       | Maven o Gradle (indicar en el README cómo compilar/ejecutar)                              |
-| Pruebas     | JUnit 5 + assertions estándar                                                             |
-| Persistencia| En memoria (no se requieren archivos ni base de datos)                                    |
-| Estilo      | Diseño OO limpio (clases para entidades, lógica de cálculo separada, etc.)               |
-| Medir cobertura | Usar EclEmma (JaCoCo)                                                |
-| TDD         | Se sugiere uso de TDD en el desarrollo (no obligatorio, pero lo recomendado)                 |
-| Modalidad   | Trabajo individual                                                                        |
-
----
-
-## 4. Menú principal (CLI)
-
-El sistema debe ofrecer un menú similar a este:
-
-1. Registrar entrada de vehículo  
-2. Registrar salida de vehículo (calcular cobro)  
-3. Listar tickets abiertos  
-4. Listar tickets cerrados  
-5. Mostrar detalle de un ticket  
-6. Mostrar total recaudado del día  
-7. Salir  
-
-> Puedes reorganizar o subdividir el menú mientras mantengas estas funcionalidades.
-
----
-
-## 5. Entregables
-Repositorio GitHub (público) con:
-- Código fuente organizado
-- Suite de tests JUnit.
-- README.md que incluya:
-  - Descripción del diseño (diagrama UML o otro), no incluir enlaces a repositorios personales (por ejemplo en Sharepoint).
-  - Instrucciones para compilar, ejecutar y probar.
-  - Ejemplo de salida de tests.
-  - Licencia
-  - Otras onsideraciones vistas previamente en curso
-  - Responde a pregunta: **¿Qué tipo de cobertura he medido y por qué?**
-
----
-
-## 6. Dudas y preguntas
-
-Cualquier duda o descubrimiento, publícalo en el **foro de la semana**, para que las respuestas queden visibles para todo el curso.

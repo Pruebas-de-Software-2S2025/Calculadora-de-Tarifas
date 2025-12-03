@@ -2,6 +2,7 @@
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
+import java.time.DayOfWeek;
 
 public class Vehiculo {
     private String idTicket;
@@ -47,13 +48,18 @@ public class Vehiculo {
         return Duration.between(fechaHoraEntrada, fechaHoraSalida).toMinutes();
     }
     
+    private boolean esFinDeSemana() {
+        DayOfWeek dia = fechaHoraEntrada.getDayOfWeek();
+        return dia == DayOfWeek.SATURDAY || dia == DayOfWeek.SUNDAY;
+    }
+    
     public double calcularCobro() {
         if(fechaHoraSalida == null) {
             return 0;
         }
         
         long minutos = calcularTiempoEnMinutos();
-        if(minutos == 0) {
+        if(minutos <= 0) {
             System.out.println("Operación Invalida");
             return 0;
         }
@@ -74,7 +80,14 @@ public class Vehiculo {
             default:
                 break;
         }
-        return (bloques * tarifa) < 15000 ? bloques * tarifa : 15000;
+        double cobro = (bloques * tarifa) < 15000 ? bloques * tarifa : 15000;
+        
+        // Aplicar descuento de 10% si es fin de semana
+        if(esFinDeSemana()) {
+            cobro = cobro * 0.9;
+        }
+        
+        return cobro;
     }
     
     @Override
