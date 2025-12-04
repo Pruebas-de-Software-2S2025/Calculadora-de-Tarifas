@@ -4,7 +4,7 @@
 
 ## 📋 Tabla de Contenidos
 1. [Descripción General](#-descripción-general)
-2. [Diseño del Sistema](#-arquitectura-del-sistema)
+2. [Arquitectura del Sistema](#arquitectura-del-sistema)
 3. [Código Fuente](#-código-fuente)
 4. [Instrucciones para Compilar, Ejecutar y Probar](#-instrucciones-para-compilar-ejecutar-y-probar)
 5. [Suite de Tests JUnit](#-suite-de-tests-junit)
@@ -30,7 +30,7 @@ Sistema de línea de comandos (CLI) que gestiona el cobro de un estacionamiento 
 
 ---
 
-## 🏗️ Arquitectura del Sistema
+<h2 id="arquitectura-del-sistema">🏗️ Arquitectura del Sistema</h2>
 
 ### Diagrama UML
 
@@ -276,6 +276,7 @@ Desarrollado como ejercicio práctico de Pruebas de Software - USM 2S 2025
 ---
 
 **Última actualización:** Diciembre 2025
+
 
 
 
